@@ -1,0 +1,40 @@
+{
+    "name": "kaholo-plugin-elasticsearch",
+    "type": "executer",
+    "imgUrl": "logo.png",
+    "execProgram": "node",
+    "main": "app.js",
+    "version": "1.0.0",
+    "description": "Integrate to Elasticseach NodeJS client",
+    "settings": [
+      {
+        "name": "connetionString",
+        "viewName": "Connection String",
+        "type": "string"
+      }
+    ],
+    "methods": [
+      {
+        "name": "INDEX_DATA",
+        "viewName": "Insert Document",
+        "params": [
+          {
+            "name":"obj",
+            "viewName": "Document Object",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "SEARCH_DATA",
+        "viewName": "Search",
+        "params": [
+          {
+            "name": "obj",
+            "viewName": "Search Object",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  }

@@ -1,0 +1,14 @@
+{
+  "name": "kaholo-plugin-elastic",
+  "version": "1.0.0",
+  "description": "Kaholo Plugin for Elastic",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ilan Yaniv",
+  "license": "ISC",
+  "dependencies": {
+    "elasticsearch": "^16.7.1"
+  }
+}
