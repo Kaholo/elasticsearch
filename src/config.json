@@ -1,5 +1,5 @@
 {
-    "name": "kaholo-plugin-elasticsearch",
+    "name": "ElasticSearch",
     "type": "executer",
     "imgUrl": "logo.png",
     "execProgram": "node",
