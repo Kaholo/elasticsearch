@@ -1,6 +1,6 @@
 {
   "name": "kaholo-plugin-elastic",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "Kaholo Plugin for Elastic",
   "main": "app.js",
   "scripts": {

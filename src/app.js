@@ -1,19 +1,51 @@
 const elasticsearch = require('elasticsearch');
 
 async function indexData(action, settings) {
-    const obj = parseToObject(action.params.obj);
-    if (!obj.hasOwnProperty('index')){
-        console.log("Error: object must have index property.");
-        throw "bad object format";
+    const index = (action.params.index || "").trim();
+    if (!index){
+        throw "Index was not provided";
     }
+    const docType = (action.params.type || "_doc").trim();
+    const id = (action.params.id || "").trim();
+    const body = action.params.body;
+    if (typeof body !== "object"){
+        throw "Body must be provided as an object from code";
+    }
+
+    let docObj = {
+        index: index,
+        type: docType,
+        body: body
+    }
+    if (id) docObj.id = id;
+
     const client = createClient(settings);
-    return client.index(obj);
+    return client.index(docObj);
 }
 
-async function searchData(action, settings) {
-    const obj = parseToObject(action.params.obj);
-    const client = createClient(settings);
-    return client.search(obj);
+async function searchDataQ(action, settings) {
+    const query = (action.params.query || "").trim(); // throws error if query is not a string
+    
+    let searchObj = {
+        q: query
+    }
+    
+    return searchByObject(action, settings, searchObj);
+}
+
+async function bodySearch(action, settings) {
+    let body = action.params.body;
+    if (typeof body !== "object"){
+        throw "Body must be provided as an object from code";
+    }
+    
+    let searchObj = {
+        body: {
+            query: body
+        }
+    }
+    
+    return searchByObject(action, settings, searchObj);
 }
 
 /////////// HELPERS ///////////
@@ -24,17 +56,19 @@ function createClient(settings) {
     return client;
 }
 
-function parseToObject(item){
-    if (typeof item === "object"){
-        return item;
-    }
-    else if (typeof item === "string"){
-        return JSON.parse(item);
-    }
-    throw "bad object format";
+function searchByObject(action, settings, searchObj){
+    const index = (action.params.index || "").trim();
+    const docType = (action.params.type || "").trim();
+
+    if (index) searchObj.index = index;
+    if (docType) searchObj.type = docType;
+
+    const client = createClient(settings);
+    return client.search(searchObj);
 }
 
 module.exports = {
-    INDEX_DATA: indexData,
-    SEARCH_DATA: searchData
+    indexData,
+    searchDataQ,
+    bodySearch
 };
