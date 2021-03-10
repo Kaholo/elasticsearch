@@ -4,7 +4,7 @@
     "imgUrl": "logo.png",
     "execProgram": "node",
     "main": "app.js",
-    "version": "1.1.0",
+    "version": "1.1.2",
     "description": "Integration with Elasticseach NodeJS client",
     "settings": [
       {
@@ -15,23 +15,69 @@
     ],
     "methods": [
       {
-        "name": "INDEX_DATA",
+        "name": "indexData",
         "viewName": "Insert Document",
         "params": [
           {
-            "name":"obj",
-            "viewName": "Document Object",
+            "name":"index",
+            "viewName": "Index",
+            "type": "string"
+          },
+          {
+            "name":"type",
+            "viewName": "Type",
+            "type": "string"
+          },
+          {
+            "name":"id",
+            "viewName": "ID",
+            "type": "string"
+          },
+          {
+            "name":"body",
+            "viewName": "Body",
             "type": "string"
           }
         ]
       },
       {
-        "name": "SEARCH_DATA",
-        "viewName": "Search",
+        "name": "searchDataQ",
+        "viewName": "Search by Query String",
         "params": [
           {
-            "name": "obj",
-            "viewName": "Search Object",
+            "name":"query",
+            "viewName": "Search Query",
+            "type": "string"
+          },
+          {
+            "name":"index",
+            "viewName": "Index",
+            "type": "string"
+          },
+          {
+            "name":"type",
+            "viewName": "Type",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "bodySearch",
+        "viewName": "Search by Body",
+        "params": [
+          {
+            "name":"body",
+            "viewName": "Search Body",
+            "type": "string"
+          },
+          {
+            "name":"index",
+            "viewName": "Index",
+            "type": "string"
+          },
+          {
+            "name":"type",
+            "viewName": "Type",
             "type": "string"
           }
         ]
