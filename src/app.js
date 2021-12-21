@@ -1,74 +1,59 @@
-const elasticsearch = require('elasticsearch');
+const parsers = require("./parsers");
 
-async function indexData(action, settings) {
-    const index = (action.params.index || "").trim();
-    if (!index){
-        throw "Index was not provided";
-    }
-    const docType = (action.params.type || "_doc").trim();
-    const id = (action.params.id || "").trim();
-    const body = action.params.body;
-    if (typeof body !== "object"){
-        throw "Body must be provided as an object from code";
-    }
-
-    let docObj = {
-        index: index,
-        type: docType,
-        body: body
-    }
-    if (id) docObj.id = id;
-
-    const client = createClient(settings);
-    return client.index(docObj);
+const ElasticsearchService = require('./elasticsearch.service');
+async function indexData(action, settings){
+    const { index, id, body } = action.params;
+    const elasticsearchService = ElasticsearchService.from(action.params, settings);
+    return elasticsearchService.indexData({
+        index: parsers.autocomplete(index),
+        id: parsers.string(id),
+        body: parsers.json(body)
+    });
 }
 
-async function searchDataQ(action, settings) {
-    const query = (action.params.query || "").trim(); // throws error if query is not a string
-    
-    let searchObj = {
-        q: query
-    }
-    
-    return searchByObject(action, settings, searchObj);
+async function searchDataQ(action, settings){
+    const { query, index } = action.params;
+    const elasticsearchService = ElasticsearchService.from(action.params, settings);
+    return elasticsearchService.searchDataQ({
+        query: parsers.string(query),
+        index: parsers.autocomplete(index)
+    });
 }
 
-async function bodySearch(action, settings) {
-    let body = action.params.body;
-    if (typeof body !== "object"){
-        throw "Body must be provided as an object from code";
-    }
-    
-    let searchObj = {
-        body: {
-            query: body
-        }
-    }
-    
-    return searchByObject(action, settings, searchObj);
+async function bodySearch(action, settings){
+    const { body, index } = action.params;
+    const elasticsearchService = ElasticsearchService.from(action.params, settings);
+    return elasticsearchService.bodySearch({
+        body: parsers.json(body),
+        index: parsers.autocomplete(index)
+    });
 }
 
-/////////// HELPERS ///////////
-
-function createClient(settings) {
-    const connectionString = settings.connectionString;
-    const client = new elasticsearch.Client({node: `${connectionString}`});
-    return client;
+async function createSnapshot(action, settings){
+    const { repository, name } = action.params;
+    const elasticsearchService = ElasticsearchService.from(action.params, settings);
+    return elasticsearchService.createSnapshot({
+        repository: parsers.autocomplete(repository),
+        name: parsers.string(name)
+    });
 }
 
-function searchByObject(action, settings, searchObj){
-    const index = (action.params.index || "").trim();
-    const docType = (action.params.type || "").trim();
-
-    if (index) searchObj.index = index;
-    if (docType) searchObj.type = docType;
-
-    const client = createClient(settings);
-    return client.search(searchObj);
-}
+async function restoreIndexBySnapshot(action, settings){
+    const { repository, snapshot, index } = action.params;
+    const elasticsearchService = ElasticsearchService.from(action.params, settings);
+    return elasticsearchService.restoreIndexBySnapshot({
+        repository: parsers.autocomplete(repository),
+        snapshot: parsers.autocomplete(snapshot),
+        index: parsers.autocomplete(index)
+    });
+} 
 
 module.exports = {
     indexData,
-    searchDataQ,
-    bodySearch
-};
+	searchDataQ,
+	bodySearch,
+	createSnapshot,
+	restoreIndexBySnapshot,
+    // Autocomplete Functions
+    ...require("./autocomplete")
+}

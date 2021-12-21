@@ -4,13 +4,16 @@
     "imgUrl": "logo.png",
     "execProgram": "node",
     "main": "app.js",
-    "version": "1.1.2",
-    "description": "Integration with Elasticseach NodeJS client",
+    "version": "2.0.0",
+    "description": "Integration with Elasticsearch.",
     "settings": [
       {
-        "name": "connetionString",
+        "name": "connectionString",
         "viewName": "Connection String",
-        "type": "string"
+        "type": "vault",
+        "description": "The url and credentials to connect to Elasticsearch node on default. Must follow this format: https://[username]:[password]@[host]:[port]/ .",
+        "placeholder": "https://elastic:changeme@127.0.0.1:9200/",
+        "learnUrl": "https://help.compose.com/docs/elasticsearch-connecting-to-elasticsearch"
       }
     ],
     "methods": [
@@ -19,66 +22,178 @@
         "viewName": "Insert Document",
         "params": [
           {
-            "name":"index",
-            "viewName": "Index",
-            "type": "string"
+            "name": "connectionString",
+            "viewName": "Connection String",
+            "type": "vault",
+            "description": "The url and credentials to connect to Elasticsearch node. Must follow this format: https://[username]:[password]@[host]:[port]/ .",
+            "placeholder": "https://elastic:changeme@127.0.0.1:9200/",
+            "learnUrl": "https://help.compose.com/docs/elasticsearch-connecting-to-elasticsearch"
           },
           {
-            "name":"type",
-            "viewName": "Type",
-            "type": "string"
+            "name":"index",
+            "viewName": "Index",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listIndexesOrNew",
+            "description": "The index to insert the document into. To create a new index insert the new name as the query for this parameter - and then select the first item showing, which will be the name you entered.",
+            "placeholder": "example_index",
+            "learnUrl": "https://www.elastic.co/blog/what-is-an-elasticsearch-index"
           },
           {
             "name":"id",
             "viewName": "ID",
-            "type": "string"
+            "type": "string",
+            "description": "The ID in the index to store the document in. If not provided elastic search will generate one.",
+            "placeholder": "1",
+            "learnUrl": "https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-id-field.html"
           },
           {
             "name":"body",
             "viewName": "Body",
-            "type": "string"
+            "type": "text",
+            "description": "The document to insert, in JSON format. Can be provided as a JSON string, as the path of a local json file on the agent, or as a JS object from code.",
+            "placeholder": "{  \"type\": \"user\",   \"name\": \"Anon Anon\",  \"user_name\": \"admin\",  \"email\": \"anon@example.com\" }",
+            "learnUrl": "https://www.elastic.co/guide/en/elasticsearch/reference/current/documents-indices.html"
           }
         ]
       },
       {
         "name": "searchDataQ",
-        "viewName": "Search by Query String",
+        "viewName": "Search By Query String",
         "params": [
+          {
+            "name": "connectionString",
+            "viewName": "Connection String",
+            "type": "vault",
+            "description": "The url and credentials to connect to Elasticsearch node. Must follow this format: https://[username]:[password]@[host]:[port]/ .",
+            "placeholder": "https://elastic:changeme@127.0.0.1:9200/",
+            "learnUrl": "https://help.compose.com/docs/elasticsearch-connecting-to-elasticsearch"
+          },
           {
             "name":"query",
             "viewName": "Search Query",
-            "type": "string"
+            "type": "string",
+            "description": "The query to use to search, in the Lucene query string syntax.",
+            "placeholder": "title:\"The Right Way\" AND text:go",
+            "learnUrl": "https://lucene.apache.org/core/2_9_4/queryparsersyntax.html"
           },
           {
             "name":"index",
             "viewName": "Index",
-            "type": "string"
-          },
-          {
-            "name":"type",
-            "viewName": "Type",
-            "type": "string"
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listIndexesAuto",
+            "description": "If specified, only look inside the specified index.",
+            "placeholder": "example_index",
+            "learnUrl": "https://www.elastic.co/blog/what-is-an-elasticsearch-index"
           }
         ]
       },
       {
         "name": "bodySearch",
-        "viewName": "Search by Body",
+        "viewName": "Search By Query Body",
         "params": [
           {
+            "name": "connectionString",
+            "viewName": "Connection String",
+            "type": "vault",
+            "description": "The url and credentials to connect to Elasticsearch node. Must follow this format: https://[username]:[password]@[host]:[port]/ .",
+            "placeholder": "https://elastic:changeme@127.0.0.1:9200/",
+            "learnUrl": "https://help.compose.com/docs/elasticsearch-connecting-to-elasticsearch"
+          },
+          {
             "name":"body",
-            "viewName": "Search Body",
-            "type": "string"
+            "viewName": "Query Body",
+            "type": "text",
+            "description": "The JSON body of the query, in the ElasticSearch query DSL format. Can be provided either as a literal JSON string, as the path for a local file on the agent, or as a JS object from code.",
+            "placeholder": "\"match\": {\n \"user.id\": \"kimchy\"\n}",
+            "learunUrl": "https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html"
           },
           {
             "name":"index",
             "viewName": "Index",
-            "type": "string"
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listIndexesAuto",
+            "description": "If specified, only look inside the specified index.",
+            "placeholder": "example_index",
+            "learnUrl": "https://www.elastic.co/blog/what-is-an-elasticsearch-index"
+          }
+        ]
+      },
+      {
+        "name": "createSnapshot",
+        "viewName": "Create Snapshot",
+        "params": [
+          {
+            "name": "connectionString",
+            "viewName": "Connection String",
+            "type": "vault",
+            "description": "The url and credentials to connect to Elasticsearch node. Must follow this format: https://[username]:[password]@[host]:[port]/ .",
+            "placeholder": "https://elastic:changeme@127.0.0.1:9200/",
+            "learnUrl": "https://help.compose.com/docs/elasticsearch-connecting-to-elasticsearch"
           },
           {
-            "name":"type",
-            "viewName": "Type",
-            "type": "string"
+            "name":"repository",
+            "viewName": "Snapshot Repository",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listSnapshotReposAuto",
+            "description": "The snapshot repository to store the new snapshot inside.",
+            "placeholder": "my_repository",
+            "learnUrl": "https://www.elastic.co/guide/en/elasticsearch/reference/current/snapshots-register-repository.html"
+          },
+          {
+            "name":"name",
+            "viewName": "Snapshot Name",
+            "type": "string",
+            "description": "The name of the new snapshot to create. Also supports date math features.",
+            "placeholder": "<example-snap-{now/d}>",
+            "learnUrl": "https://www.elastic.co/guide/en/elasticsearch/reference/current/date-math-index-names.html"
+          }
+        ]
+      },
+      {
+        "name": "restoreIndexBySnapshot",
+        "viewName": "Restore Index By Snapshot",
+        "params": [
+          {
+            "name": "connectionString",
+            "viewName": "Connection String",
+            "type": "vault",
+            "description": "The url and credentials to connect to an Elasticsearch node. Must follow this format: https://[username]:[password]@[host]:[port]/ .",
+            "placeholder": "https://elastic:changeme@127.0.0.1:9200/",
+            "learnUrl": "https://help.compose.com/docs/elasticsearch-connecting-to-elasticsearch"
+          },
+          {
+            "name":"repository",
+            "viewName": "Snapshot Repository",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listSnapshotReposAuto",
+            "description": "The snapshot repository to choose a snapshot from.",
+            "placeholder": "my_repository",
+            "learnUrl": "https://www.elastic.co/guide/en/elasticsearch/reference/current/snapshots-register-repository.html"
+          },
+          {
+            "name":"snapshot",
+            "viewName": "Snapshot",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listSnapshotsAuto",
+            "description": "The snapshot to restore the index from.",
+            "placeholder": "example-snap-123456789",
+            "learnUrl": "https://www.elastic.co/guide/en/elasticsearch/reference/current/snapshots-take-snapshot.html"
+          },
+          {
+            "name":"index",
+            "viewName": "Index",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listIndexesAuto",
+            "description": "The index to restore.",
+            "placeholder": "example_index",
+            "learnUrl": "https://www.elastic.co/blog/what-is-an-elasticsearch-index"
           }
         ]
       }
