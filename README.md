@@ -6,7 +6,7 @@ Kaholo plugin for integration with Elasticsearch.
 [Learn More](https://help.compose.com/docs/elasticsearch-connecting-to-elasticsearch)
 
 ## Method: Insert Document
-Insert a new document into a new or existing 
+Insert a new document into a new or existing index.
 
 ## Parameters
 1. Connection String (Vault) **Required If Not In Settings** - The url and credentials to connect to Elasticsearch node. Must follow this format: https://[username]:[password]@[host]:[port]/ .
